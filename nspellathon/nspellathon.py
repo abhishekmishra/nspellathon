@@ -20,11 +20,12 @@ for line in DICTIONARY_FILE:
         else:
             DICTIONARY[len(w)] = [w]
 
-#print dictionary
-
 class NSpellathon:
     '''
-
+    Defines a spellathon puzzle.
+    Includes the letters of the word in the puzzle,
+    and the index of the letter in the array of letters
+    to use as the central letter in the puzzle.
     '''
 
     central_index = -1
@@ -35,41 +36,54 @@ class NSpellathon:
         self.central_index = central
 
     def get_puzzle(self):
+        '''
+        Returns the list of letters in the puzzle.
+        '''
         return self.letters
 
     def get_central_char(self):
+        '''
+        Returns the central letter/character in the puzzle.
+        '''
         return self.letters[self.central_index]
 
     def print_puzzle(self):
+        '''
+        Prints a dot and dash representation of the puzzle.
+        Each dot or dash represents a letter in the word to be guessed.
+        There is one and only one dash which represents the letter shown in the
+        central portion of the puzzle.
+        '''
         print(self.letters)
-        ul = ''
+        puzzle_line = ''
         for i in range(0, 7):
             if i == self.central_index:
-                ul += '-'
+                puzzle_line += '-'
             else:
-                ul += '.'
-        print(ul)
+                puzzle_line += '.'
+        print(puzzle_line)
 
     def __str__(self):
-        le = self.letters.upper()
-        ci = self.central_index
-        cc = le[ci]
-        le = le[:ci] + le[ci+1:]
-        out =  '    ________\n'
-        out += '   /\  ' + le[0] + '   /\\\n'
+        upper_letters = self.letters.upper()
+        central_letter = upper_letters[self.central_index]
+        upper_letters = upper_letters[:self.central_index] + upper_letters[self.central_index+1:]
+        out = '    ________\n'
+        out += '   /\  ' + upper_letters[0] + '   /\\\n'
         out += '  /  \____/  \\\n'
-        out += ' / ' + le[1] + ' /    \\ ' + le[2] + ' \\\n'
-        out += '/___/  ' + cc + '   \\___\\\n'
+        out += ' / ' + upper_letters[1] + ' /    \\ ' + upper_letters[2] + ' \\\n'
+        out += '/___/  ' + central_letter + '   \\___\\\n'
         out += '\   \      /   /\n'
-        out += ' \ ' + le[3] + ' \____/ ' + le[4] + ' /\n'
-        out += '  \  /  ' + le[5] + ' \  /\n'
+        out += ' \ ' + upper_letters[3] + ' \____/ ' + upper_letters[4] + ' /\n'
+        out += '  \  /  ' + upper_letters[5] + ' \  /\n'
         out += '   \/______\/\n'
 
         return out
 
 class NSpellathonSolution:
     '''
-
+    Represents a solution of the spellathon puzzle.
+    Includes the puzzle object and all the discovered
+    solution words.
     '''
     puzzle = None
     solution_words = None
@@ -130,13 +144,24 @@ class NSpellathonSolution:
                + tabulate.tabulate(self.get_score(), headers='firstrow', tablefmt="grid")
 
 def create_spellathon():
-    r = DICTIONARY[7][random.randint(0, len(DICTIONARY[7])-1)]
+    '''
+    This method creates and returns a spellathon game object.
+
+    1. To create the spellathon object it first looks up the dictinoary
+    for a random word with length 7.
+
+    2. It then creates a random permutation of the word and creates
+    an NSPellathon object with it, and a random number between 0 and 6
+    to use as the central character in the spellathon puzzle.
+
+    '''
+    random_word = DICTIONARY[7][random.randint(0, len(DICTIONARY[7])-1)]
     idx = random.randint(0, 6)
-    print('random word is - ', r)
-    perms = [''.join(p) for p in permutations(r)]
+    print('random word is - ', random_word)
+    perms = [''.join(p) for p in permutations(random_word)]
     word = perms[random.randint(0, len(perms))]
 
-    return NSpellathon(word = word, central=idx)
+    return NSpellathon(word=word, central=idx)
 
 def solve_spellathon(ns):
     soln = NSpellathonSolution(ns)
